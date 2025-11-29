@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FraudIQ – Smart Real-Time Fraud Detection for UPI & Cards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-left">
+      <div class="logo-circle">BB</div>
+      <span class="logo-text">FraudIQ</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#realtime">Instant Check</a>
+      <a href="#ocr">Screenshot Scan</a>
+      <a href="#alerts">Risk History</a>
+      <a href="#subscription">Plans</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Detect Fraudulent Payments Before They Happen.</h1>
+
+        <p>
+          FraudIQ keeps watch over UPI, card, wallet, and net-banking transactions in real time.  
+          Instantly detect risky links, fake requests, impersonation attempts, and suspicious activity.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#ocr" class="btn primary">Scan Payment Screenshot</a>
+          <a href="#realtime" class="btn ghost">Run Manual Check</a>
+        </div>
+
+        <ul class="hero-highlights">
+          <li>✅ Instant fraud scoring.</li>
+          <li>✅  Learns from your safe transactions.</li>
+          <li>✅  Smart alerts via SMS & email.</li>
+        </ul>
+      </div>
+
+      <div class="hero-card">
+        <h2>Live Risk Monitor</h2>
+
+        <div id="hero-risk-score" class="risk-score-big">80 / 100</div>
+
+        <div class="risk-bar">
+          <div id="hero-risk-bar-fill" class="risk-bar-fill"></div>
+        </div>
+
+        <p id="hero-risk-label" class="risk-label">Run a scan to view risk level.</p>
+
+      
+      </div>
+    </section>
+
+    <!-- REAL TIME CHECK -->
+    <section id="realtime" class="section">
+      <h2>Instant Transaction Analysis</h2>
+
+      <p class="section-subtitle">
+        Enter the transaction details below. Our system evaluates the risk using intelligent rules,
+        pattern detection, and your learned safe history.
+      </p>
+
+      <form id="transaction-form" class="card form-card">
+        <div class="form-grid">
+
+          <div class="form-control">
+            <label>Payment Method</label>
+            <select id="channel">
+              <option value="upi">UPI</option>
+              <option value="card">Debit/Credit Card</option>
+              <option value="netbanking">Net Banking</option>
+              <option value="wallet">Wallet</option>
+            </select>
+          </div>
+
+          <div class="form-control">
+            <label>Amount (₹)</label>
+            <input type="number" id="amount" min="1" placeholder="Example: 2499" required />
+          </div>
+
+          <div class="form-control">
+            <label>Merchant / Receiver Name</label>
+            <input type="text" id="merchant" placeholder="Example: Amazon, ABC Store" required />
+          </div>
+
+          <div class="form-control">
+            <label>UPI ID / Account / Card Hint</label>
+            <input type="text" id="accountHint" placeholder="abcd@upi, **** 4321 (optional)" />
+          </div>
+
+          <div class="form-control full">
+            <label>Payment / Notification Link</label>
+            <input type="url" id="link" placeholder="Paste UPI link, short link, or suspicious URL" />
+          </div>
+
+          <div class="form-control full">
+            <label>Notes (Optional)</label>
+            <textarea id="notes" placeholder="Refund message, KYC alert, unknown sender..." rows="2"></textarea>
+          </div>
+
+        </div>
+
+        <button type="submit" class="btn primary full-width">
+          Analyze Transaction
+        </button>
+      </form>
+
+      <!-- RESULT -->
+      <div id="transaction-result" class="card result-card hidden">
+        <h3>Risk Summary</h3>
+
+        <div class="risk-summary">
+          <div>
+            <span class="risk-score-label">Score</span>
+            <div id="tx-risk-score" class="risk-score">–</div>
+          </div>
+
+          <div class="risk-bar small">
+            <div id="tx-risk-bar-fill" class="risk-bar-fill"></div>
+          </div>
+        </div>
+
+        <p id="tx-risk-level" class="risk-level-text"></p>
+        <ul id="tx-reasons" class="reason-list"></ul>
+
+        <button id="mark-safe-btn" class="btn ghost small">
+          Mark as Safe (Improve Accuracy)
+        </button>
+      </div>
+    </section>
+
+    <!-- OCR SCANNER -->
+    <section id="ocr" class="section">
+      <h2>Screenshot Fraud Scanner</h2>
+
+      <p class="section-subtitle">
+        Upload a screenshot of any payment message or request.  
+        FraudIQ extracts the text, checks patterns, and rates the scam likelihood.
+      </p>
+
+      <form id="ocr-form" class="card form-card">
+        <div class="form-control">
+          <label>Select Screenshot</label>
+          <input type="file" id="ocr-image" accept="image/*" required />
+        </div>
+
+        <button type="submit" class="btn primary full-width">
+          Scan Screenshot
+        </button>
+      </form>
+
+      <div id="ocr-loading" class="hidden" style="margin-top:10px;">
+        Scanning screenshot… Please wait.
+      </div>
+
+      <div id="ocr-result" class="card hidden" style="margin-top:20px;">
+        <h3>Screenshot Analysis</h3>
+
+        <div class="risk-summary">
+          <div>
+            <span class="risk-score-label">Score</span>
+            <div id="ocr-risk-score" class="risk-score">0</div>
+          </div>
+
+          <div class="risk-bar small">
+            <div id="ocr-risk-bar-fill" class="risk-bar-fill"></div>
+          </div>
+        </div>
+
+        <p id="ocr-risk-level" class="risk-level-text"></p>
+
+        <details style="margin-top:1rem;">
+          <summary>View Extracted Text</summary>
+          <pre id="ocr-text"></pre>
+        </details>
+
+        <ul id="ocr-reasons"></ul>
+      </div>
+    </section>
+
+    <!-- ALERTS & HISTORY -->
+    <section id="alerts" class="section">
+      <h2>Alerts & Analysis History</h2>
+
+      <p class="section-subtitle">
+        Track previously analysed transactions and see which ones triggered alerts.
+      </p>
+
+      <div class="card">
+        <div class="alerts-header">
+          <span>Recent Activity</span>
+          <button id="clear-history" class="btn ghost small">Clear</button>
+        </div>
+        <div id="alerts-list" class="alerts-list empty-state">
+          No transactions analysed yet.
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBSCRIPTION -->
+    <section id="subscription" class="section alt">
+      <h2>Plans & Alert Settings</h2>
+
+      <p class="section-subtitle">
+        Enable SMS and email alerts for suspicious activity.  
+        Choose a plan that fits your usage.
+      </p>
+
+      <div class="subscription-grid">
+
+        <!-- FREE -->
+        <div class="card plan-card">
+          <h3>Free</h3>
+          <p>Essential safety for casual users.</p>
+          <ul>
+            <li>✔ Manual transaction checks</li>
+            <li>✔ Basic risk alerts</li>
+            <li>❌ SMS alerts</li>
+            <li>❌ Email alerts</li>
+          </ul>
+          <p class="plan-price">₹0 / month</p>
+        </div>
+
+        <!-- PRO -->
+        <div class="card plan-card">
+          <h3>Pro</h3>
+          <p>Advanced protection with priority alerts.</p>
+          <ul>
+            <li>✔ Manual & OCR checks</li>
+            <li>✔ SMS alerts</li>
+            <li>✔ Email alerts</li>
+            <li>✔ Intelligent risk learning</li>
+          </ul>
+          <p class="plan-price">₹199 / month</p>
+        </div>
+
+        <!-- ENTERPRISE -->
+        <div class="card plan-card">
+          <h3>Enterprise</h3>
+          <p>Full monitoring with team access & custom rules.</p>
+          <ul>
+            <li>✔ Custom thresholds</li>
+            <li>✔ Multi-user dashboard</li>
+            <li>✔ Priority 24/7 support</li>
+          </ul>
+          <p class="plan-price">Contact us</p>
+        </div>
+
+      </div>
+
+      <!-- SUBSCRIPTION FORM -->
+      <form id="subscription-form" class="card form-card">
+        <h3>Activate Alerts</h3>
+
+        <div class="form-grid">
+          <div class="form-control">
+            <label>Select Plan</label>
+            <select id="plan">
+              <option value="free">Free</option>
+              <option value="pro" selected>Pro</option>
+              <option value="enterprise">Enterprise</option>
+            </select>
+          </div>
+
+          <div class="form-control">
+            <label>Email</label>
+            <input type="email" id="sub-email" required placeholder="you@example.com" />
+          </div>
+
+          <div class="form-control">
+            <label>Mobile Number</label>
+            <input type="tel" id="sub-phone" placeholder="+91 98XXXXXXXX" />
+          </div>
+
+          <div class="form-control full">
+            <label>Alert Channels</label>
+            <div class="chips">
+              <label><input type="checkbox" id="alert-browser" checked /> Browser</label>
+              <label><input type="checkbox" id="alert-email" checked /> Email</label>
+              <label><input type="checkbox" id="alert-sms" /> SMS</label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn primary full-width">Save Settings</button>
+        <p id="subscription-status" class="status-msg"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+<footer class="footer">
+  <p>© <span id="year"></span> FraudIQ. All rights reserved.</p>
+  <p class="footer-sub">
+    Designed for secure digital payments across UPI, cards, wallets and net-banking.
+    This interface is a demo — connect your backend, APIs, and ML models for production.
+  </p>
+</footer>
+
+
+  <!-- SCRIPTS -->
+  <script src="https://unpkg.com/tesseract.js@v4.0.2/dist/tesseract.min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
